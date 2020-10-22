@@ -1,30 +1,47 @@
 {
-	"name": "mongoose-cursor-paginator",
-	"version": "1.0.0",
-	"description": "",
-	"main": "lib/index.js",
-	"directories": {
-		"lint": "eslint app app_console app_worker",
-		"lib": "lib"
-	},
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"author": "Andrew L. (men232@yandex.ua)",
-	"license": "ISC",
-	"dependencies": {
-		"base64url": "^3.0.1",
-		"clone-deep": "^4.0.1",
-		"debug": "^4.1.1",
-		"kareem": "^2.3.1",
-		"msgpack-lite": "^0.1.26",
-		"through2": "^4.0.2",
-		"through2-filter": "^3.0.0"
-	},
-	"devDependencies": {
-		"eslint": "^7.5.0"
-	},
-	"peerDependencies": {
-		"mongoose": "5.x"
-	}
+  "name": "@andrew_l/mongoose-cursor-paginator",
+  "version": "1.0.0",
+  "description": "# Installation",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew L. (men232@yandex.ua)",
+  "license": "MIT",
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "clone-deep": "^4.0.1",
+    "debug": "^4.1.1",
+    "kareem": "^2.3.1",
+    "msgpack-lite": "^0.1.26",
+    "through2": "^4.0.2",
+    "through2-filter": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0"
+  },
+  "peerDependencies": {
+    "mongoose": "5.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/men232/mongoose-cursor-paginator.git"
+  },
+  "keywords": [
+    "mongoose",
+    "cursor",
+    "paginator",
+    "pagination",
+    "pagin",
+    "token",
+    "based",
+    "pagination"
+  ],
+  "bugs": {
+    "url": "https://github.com/men232/mongoose-cursor-paginator/issues"
+  },
+  "homepage": "https://github.com/men232/mongoose-cursor-paginator#readme"
 }
