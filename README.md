@@ -2,7 +2,7 @@
 
 # Installation
 
-`npm i mongoose-cursor-paginator`
+`npm i @andrew_l/mongoose-cursor-paginator`
 
 ```js
 import mongoose from 'mongoose';
