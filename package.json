@@ -1,6 +1,6 @@
 {
   "name": "@andrew_l/mongoose-cursor-paginator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "# Installation",
   "main": "lib/index.js",
   "directories": {
