@@ -1,6 +1,6 @@
 {
   "name": "@andrew_l/mongoose-cursor-paginator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A mongoose cursor based pagination with stream supporting & some sugar",
   "main": "lib/index.js",
   "directories": {
