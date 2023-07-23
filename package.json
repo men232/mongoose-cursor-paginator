@@ -1,47 +1,56 @@
 {
-  "name": "@andrew_l/mongoose-cursor-paginator",
-  "version": "1.0.4",
-  "description": "A mongoose cursor based pagination with stream supporting & some sugar",
-  "main": "lib/index.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Andrew L. (men232@yandex.ua)",
-  "license": "MIT",
-  "dependencies": {
-    "base64url": "^3.0.1",
-    "clone-deep": "^4.0.1",
-    "debug": "^4.1.1",
-    "kareem": "^2.3.1",
-    "msgpack-lite": "^0.1.26",
-    "through2": "^4.0.2",
-    "through2-filter": "^3.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^7.5.0"
-  },
-  "peerDependencies": {
-    "mongoose": "5.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/men232/mongoose-cursor-paginator.git"
-  },
-  "keywords": [
-    "mongoose",
-    "cursor",
-    "paginator",
-    "pagination",
-    "pagin",
-    "token",
-    "based",
-    "pagination"
-  ],
-  "bugs": {
-    "url": "https://github.com/men232/mongoose-cursor-paginator/issues"
-  },
-  "homepage": "https://github.com/men232/mongoose-cursor-paginator#readme"
+	"name": "@andrew_l/mongoose-cursor-paginator",
+	"version": "2.0.0",
+	"description": "",
+	"type": "module",
+	"files": [
+		"dist/**"
+	],
+	"scripts": {
+		"dev": "nodemon src/playground.ts",
+		"build": "rm -rf dist && rollup -c",
+		"test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --forceExit --verbose test/*.spec.js",
+		"test:watch": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --forceExit --verbose test/*.spec.js --watch"
+	},
+	"author": {
+		"name": "Andrew L.",
+		"email": "andrew.io.dev@gmail.com"
+	},
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/men232/mongoose-cursor-paginator.git"
+	},
+	"bugs": {
+		"url": "https://github.com/men232/mongoose-cursor-paginator/issues"
+	},
+	"main": "dist/mongoose-cursor-paginator.js",
+	"module": "dist/mongoose-cursor-paginator.mjs",
+	"typings": "dist/mongoose-cursor-paginator.d.ts",
+	"dependencies": {
+		"clone-deep": "^4.0.1",
+		"crc": "^4.3.2",
+		"debug": "^4.1.1"
+	},
+	"devDependencies": {
+		"@types/debug": "^4.1.8",
+		"@types/jest": "^29.5.3",
+		"@types/node": "^20.3.2",
+		"esbuild": "^0.18.16",
+		"eslint": "^8.45.0",
+		"jest": "^29.6.1",
+		"mongoose": "^7.4.0",
+		"nodemon": "^2.0.22",
+		"prettier": "^3.0.0",
+		"rollup": "^3.26.3",
+		"rollup-plugin-dts": "^5.3.0",
+		"rollup-plugin-esbuild": "^5.0.0",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.1.5"
+	},
+	"peerDependencies": {
+		"@andrew_l/tl-pack": ">= 0.1.4",
+		"kareem": ">= 2.3.2",
+		"mongoose": ">=6.0.0"
+	}
 }

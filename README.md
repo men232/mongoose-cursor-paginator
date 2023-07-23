@@ -1,130 +1,132 @@
-# Mongose Paginator
+# Pagination plugin for mongoose >= 6.x <!-- omit in toc -->
 
-# Installation
+![license](https://img.shields.io/npm/l/%40andrew_l%2Fmongoose-cursor-paginator) ![npm version](https://img.shields.io/npm/v/%40andrew_l%2Fmongoose-cursor-paginator)
+
+## Installation
 
 `npm i @andrew_l/mongoose-cursor-paginator`
 
 ```js
 import mongoose from 'mongoose';
-import mongoosePaginator from 'mongoose-cursor-paginator';
+import { setupPlugin } from '@andrew_l/mongoose-cursor-paginator';
 
-mongoosePaginator(mongoose);
+setupPlugin(mongoose);
 ```
 
-# Usage examples
+## Usage examples
 
-## Simple search with catching filter & sort options of original mongoose query. 
+Simple search with catching filter & sort options of original mongoose query.
+
 ```js
 // Fetch the first page
 const firstPage = await Users.find({ role: 'admin' })
-	.limit(10)
-	.sort({ createdAt: -1 })
-	.lean()
-	.paginator();
+  .limit(10)
+  .sort({ createdAt: -1 })
+  .lean()
+  .paginator();
 
 console.log(firstPage);
 /* {
   "metadata": {
-	"hasNext": true,
-	"next": "ldkkZjBhZTViZTQtNzRkNC00YzY2LWI2MWItYjMzYjE0NzQwODI4pFVzZXKBo19pZP-Bo19pZNkkZjBhZTViZTQtNzRkNC00YzY2LWI2MWItYjMzYjE0NzQwODI4gA"
+    "hasNext": true,
+    "next": "ldkkZjBhZTViZTQtNzRkNC00YzY2LWI2MWItYjMzYjE0NzQwODI4pFVzZXKBo19pZP-Bo19pZNkkZjBhZTViZTQtNzRkNC00YzY2LWI2MWItYjMzYjE0NzQwODI4gA"
   },
   "items": [
-	{ doc_1 },
-	{ doc_n },
-	...
-	{ doc_10 },
+    { doc_1 },
+    { doc_n },
+    ...
+    { doc_10 },
   ]
 } */
 
 const secondPage = await Users.find({ role: 'admin' })
-	.limit(10)
-	// sort can be overwrited by next token
-	.sort({ createdAt: -1 })
-	.lean()
-	.paginator({
-		next: firstPage.metadata.next
-	});
-	
+  .limit(10)
+  // sort can be overwrited by next token
+  .sort({ createdAt: -1 })
+  .lean()
+  .paginator({ next: firstPage.metadata.next });
+
 console.log(secondPage);
 /* {
   "metadata": {
-	"hasNext": false,
-	"next": null
+    "hasNext": false,
+    "next": null
   },
   "items": [
-	{ doc_1 },
-	{ doc_2 },
-	{ doc_3 }
+    { doc_1 },
+    { doc_2 },
+    { doc_3 }
   ]
 } */
 ```
 
-## Advanced usage with passing paginator options by hand
+## Advanced usage
 
 ```js
-import { paginCursor } from 'mongoose-cursor-paginator';
-
 // Make query with some criteria
 const firstPage = await searchUsers({
-	role: 'admin'
+  role: 'admin',
 });
 
-// Now we can pass only next cursor and keep the role conditions from previous query
+// Now we can use only next token and keep the role filter from previous query
 const secondPage = await searchUsers({
-	next: firstPage.metadata.next
+  next: firstPage.metadata.next,
 });
 
-function searchUsers(queryParams) {
-	const paginOptions = {
-		queryFilter: {},
-		queryOptions: {
-			sort: { status: 1, createdAt: -1, _id: 1 },
-			limit: 10
-		},
-		// Indicates that we don't wanna to use 'status' as a range condition for next queries
-		paginationFields: ['createdAt', '_id'],
-		
-		// Set current query params as payload for next cursor token
-		preQuery: function() {
-			this.next.payload = queryParams;
-		}
-	}
-	
-	if (queryParams.next) {
-		// Handly decode cursor token
-		paginOptions.next = paginCursor.decode(queryParams.next);
+function searchUsers(search) {
+  const savedSearch = {};
 
-		// Set payload data as query params from previous request
-		queryParams = paginOptions.next.payload;
-	}
+  const paign = User.find()
+    .lean()
+    .sort({ status: 1, createdAt: -1, _id: 1 })
+    .limit(50)
+    .paginator({
+      next: search.next,
+      // Exclude `status` from pagination cursor.
+      paginationFields: ['createdAt', '_id'],
 
-	// Parse query object and pass into db conditions
-	if (typeof queryParams.role === 'string') {
-		paginOptions.queryFilter.role = queryParams.role;
-	}
+      // Save search params into token payload
+      preQuery() {
+        this.nextToken.payload = savedSearch;
+      },
+    });
 
-	 return Users.find()
-		.lean()
-		.paginator(paginOptions);
+  // Use token payload as search params
+  if (paign.previousToken?.payload) {
+    search = paign.previousToken?.payload;
+  }
+
+  const filter = {};
+
+  if (typeof search.role === 'string' && search.role) {
+    // Save role for next query
+    savedSearch.role = search.role;
+
+    // Use role as filter condition
+    filter.role = search.role;
+  }
+
+  // Update query filter
+  paign.getQuery().setQuery(filter);
+
+  return paign.exec();
 }
 ```
 
-## Stream usage
+## Stream example
 
 ```js
-// Fetch the first page
-const dbQuery = await Users.find({ role: 'admin' })
-	.limit(10)
-	.sort({ createdAt: -1 })
-	.lean();
+const query = await Users.find({ role: 'admin' });
 
-const dbStream = await dbQuery.paginator.stream();
+const dbStream = await query.paginator.stream();
 
-dbStream.on('data', console.log);
-dbStream.on('end', () => {
-    const metadata = dbQuery.paginator().getMetadata();
-    console.log({ metadata });
-    /* {
+stream.on('data', console.log);
+stream.on('end', () => {
+  const metadata = query.paginator().getMetadata();
+
+  console.log({ metadata });
+
+  /* {
       "metadata": {
     	"hasNext": true,
     	"next": "ldkkZjBhZTViZTQtNzRkNC00YzY2LWI2MWItYjMzYjE0NzQwODI4pFVzZXKBo19pZP-Bo19pZNkkZjBhZTViZTQtNzRkNC00YzY2LWI2MWItYjMzYjE0NzQwODI4gA"
@@ -134,4 +136,4 @@ dbStream.on('end', () => {
 ```
 
 ### Tips
-- The last sorting key **must be uniq** & sortable (Number, ObjectId has perfect)
+- The last sorting key **must be uniq** & sortable (Number, ObjectId is perfect)

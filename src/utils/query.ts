@@ -1,21 +1,15 @@
-const { isEmptyObject, cloneDeep, sameKeys } = require('./object');
+import { isEmptyObject, cloneDeep, sameKeys } from './object.js';
 
-module.exports = {
-	rangeFilter,
-	mergeConditions
-};
+export function rangeFilter(sortDirection: Record<string, any>, sortValues: Record<string, any>) {
+	const keys = Object.keys(sortDirection).filter((sortKey) => sortValues[sortKey] !== undefined);
 
-function rangeFilter(sortDirection, sortValues) {
-	const keys = Object.keys(sortDirection)
-		.filter(sortKey => sortValues[sortKey] !== undefined);
-
-	const op = (sortKey) => {
+	const op = (sortKey: string) => {
 		const direction = sortDirection[sortKey];
 
 		return direction === 1 ? '$gt' : '$lt';
 	};
 
-	const val = (sortKey) => sortValues[sortKey];
+	const val = (sortKey: string) => sortValues[sortKey];
 
 	if (keys.length === 0) {
 		return {};
@@ -24,8 +18,8 @@ function rangeFilter(sortDirection, sortValues) {
 
 		return {
 			[sortKey]: {
-				[op(sortKey)]: val(sortKey)
-			}
+				[op(sortKey)]: val(sortKey),
+			},
 		};
 	}
 
@@ -37,30 +31,32 @@ function rangeFilter(sortDirection, sortValues) {
 
 		if (i === 0) {
 			$or.push({
-				[sortKey]: { [op(sortKey)]: val(sortKey) }
+				[sortKey]: { [op(sortKey)]: val(sortKey) },
 			});
 		} else {
-			const filter = {};
+			const filter: Record<string, any> = {};
 
-			keys.slice(0, i).map(sortKey => {
+			keys.slice(0, i).map((sortKey) => {
 				filter[sortKey] = { $eq: val(sortKey) };
 			});
 
 			const sortKey = keys[i];
 
 			filter[sortKey] = {
-				[op(sortKey)]: val(sortKey)
+				[op(sortKey)]: val(sortKey),
 			};
 
 			$or.push(filter);
 		}
 	}
 
+	if ($or.length === 1) return $or[0];
+
 	return { $or };
 }
 
-function mergeConditions(first, second) {
-	switch(true) {
+export function mergeConditions(first: Record<string, any>, second: Record<string, any>) {
+	switch (true) {
 		// Just return second
 		case isEmptyObject(first):
 			return cloneDeep(second);
@@ -71,10 +67,7 @@ function mergeConditions(first, second) {
 
 		// Just assign when no conflicts
 		case sameKeys(first, second).length === 0:
-			return Object.assign(
-				cloneDeep(first),
-				cloneDeep(second)
-			);
+			return Object.assign(cloneDeep(first), cloneDeep(second));
 
 		// Merge with $and way
 		case Array.isArray(first.$and):
@@ -92,7 +85,7 @@ function mergeConditions(first, second) {
 		// Regular merge via $and wrapping
 		default:
 			return {
-				$and: [cloneDeep(first), cloneDeep(second)]
+				$and: [cloneDeep(first), cloneDeep(second)],
 			};
 	}
 }

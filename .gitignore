@@ -73,3 +73,5 @@ typings/
 
 # JetBrains IDE
 .idea
+
+src/playground.ts
