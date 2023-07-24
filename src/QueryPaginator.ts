@@ -314,7 +314,7 @@ export class QueryPaginator<ResultType = any> {
 		}
 
 		// Apply changes on query
-		this.query.setOptions(queryOptions, true);
+		this.query.setOptions(queryOptions);
 		this.query.setQuery(queryFilter);
 
 		debug.tweak('set queryOptions = %o', queryOptions);
