@@ -24,9 +24,16 @@
 	"bugs": {
 		"url": "https://github.com/men232/mongoose-cursor-paginator/issues"
 	},
-	"main": "dist/mongoose-cursor-paginator.js",
-	"module": "dist/mongoose-cursor-paginator.mjs",
-	"typings": "dist/mongoose-cursor-paginator.d.ts",
+	"main": "./dist/mongoose-cursor-paginator.cjs",
+	"module": "./dist/mongoose-cursor-paginator.mjs",
+	"types": "./dist/mongoose-cursor-paginator.d.ts",
+	"exports": {
+		".": {
+			"require": "./dist/mongoose-cursor-paginator.cjs",
+			"import": "./dist/mongoose-cursor-paginator.mjs",
+			"types": "./dist/mongoose-cursor-paginator.d.ts"
+		}
+	},
 	"dependencies": {
 		"clone-deep": "^4.0.1",
 		"crc": "^4.3.2",
