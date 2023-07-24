@@ -75,10 +75,12 @@ const tryLastPage = async (sortDirection) => {
 	expect(paignResult.metadata.next).toEqual(null);
 };
 
-beforeAll(async () => {
-	await setupConnection();
-	// await setupSeeds();
-});
+await setupConnection();
+
+// beforeAll(async () => {
+// 	await setupConnection();
+// 	// await setupSeeds();
+// });
 
 test('tweak query without options', () => {
 	const queryOptions = User.find().paginator().tweak().getQuery().getOptions();
