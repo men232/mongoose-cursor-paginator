@@ -28,3 +28,4 @@ declare module 'mongoose' {
 export { default as MongoosePaginatorError } from './MongoosePaginatorError.js';
 export { default as NextToken } from './NextToken.js';
 export { default as setupPlugin } from './setupPlugin.js';
+export * from './utils/query.js';
