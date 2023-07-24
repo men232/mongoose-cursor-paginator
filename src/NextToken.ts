@@ -55,9 +55,9 @@ export default class NextToken {
 		});
 
 		writer.writeInt8(this.schemaVersion, false);
-		writer.writeInt32(this.modelNameCRC);
-		writer.writeObject(this.sortDirection || {});
-		writer.writeObject(this.sortValues || {});
+		writer.writeObject(this.modelNameCRC);
+		writer.writeMap(this.sortDirection || {});
+		writer.writeMap(this.sortValues || {});
 		writer.writeObject(this.payload || null);
 
 		return writer.getBuffer() as Buffer;
@@ -76,9 +76,9 @@ export default class NextToken {
 
 		const token = new NextToken();
 
-		token.modelNameCRC = reader.readInt32();
-		token.sortDirection = reader.readObject();
-		token.sortValues = reader.readObject();
+		token.modelNameCRC = reader.readObject();
+		token.sortDirection = reader.readMap(false);
+		token.sortValues = reader.readMap(false);
 		token.payload = reader.readObject();
 
 		return token;
