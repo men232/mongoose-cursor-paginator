@@ -1,16 +1,16 @@
 // @ts-ignore
-import Kareem from 'kareem';
-import type internal from 'node:stream';
 import d from 'debug';
+import Kareem from 'kareem';
 import mongoose from 'mongoose';
+import type internal from 'node:stream';
 
-import NextToken from './NextToken.js';
 import MongoosePaginatorError from './MongoosePaginatorError.js';
+import NextToken from './NextToken.js';
 
-import streamFilter from './utils/streamFilter.js';
-import { isEmptyObject, cloneDeep, pick, defineGetter, isLastKeys } from './utils/object.js';
-import { rangeFilter, mergeConditions } from './utils/query.js';
 import crc32 from './utils/crc32.js';
+import { cloneDeep, defineGetter, isEmptyObject, isLastKeys, pick } from './utils/object.js';
+import { mergeConditions, rangeFilter } from './utils/query.js';
+import streamFilter from './utils/streamFilter.js';
 
 const debug = {
 	init: d('mongoose-paginator:init'),
@@ -210,7 +210,11 @@ export class QueryPaginator<ResultType = any> {
 			this._hooks.execPre('query', this, [], (error: Error | null) => {
 				if (error) return reject(error);
 
-				this.maybeTweak();
+				try {
+					this.maybeTweak();
+				} catch (err) {
+					return reject(err);
+				}
 
 				const limit = this.query.getOptions().limit;
 

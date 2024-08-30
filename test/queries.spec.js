@@ -1,5 +1,5 @@
-import { User, setupConnection, setupSeeds } from './mongoose.js';
 import { MongoosePaginatorError, NextToken } from '../dist/mongoose-cursor-paginator.mjs';
+import { User, setupConnection } from './mongoose.js';
 
 const tryFirstPage = async (sort) => {
 	const nativeResult = await User.find().lean().sort(sort).limit(10);
