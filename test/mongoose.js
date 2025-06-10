@@ -9,6 +9,12 @@ export const User = mongoose.model(
 		name: String,
 		email: String,
 		createdAt: Date,
+		profile: new mongoose.Schema(
+			{
+				subscriptionDate: { type: Date },
+			},
+			{ _id: false },
+		),
 	}),
 );
 
@@ -34,6 +40,9 @@ export async function setupSeeds(amount = 1000) {
 			name: `User ${ittr + 1}`,
 			email: `user${ittr + 1}@test.com`,
 			createdAt: new Date(now - ittr * 1000 * 60 * 60 * 24),
+			profile: {
+				subscriptionDate: new Date(now - ittr * 100000),
+			},
 		});
 	}
 }

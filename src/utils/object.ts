@@ -17,11 +17,18 @@ export function isEmptyObject(obj: object) {
 	return true;
 }
 
+function getNestedValue(obj: any, path: string): any {
+	return path.split('.').reduce((current, key) => {
+		return current && current[key] !== undefined ? current[key] : undefined;
+	}, obj);
+}
+
 export function pick(obj: Record<string, any>, list: string[]) {
 	const result: Record<string, any> = {};
 
-	for (const key of list) {
-		result[key] = obj[key];
+	for (const path of list) {
+		const value = getNestedValue(obj, path as string);
+		result[path] = value;
 	}
 
 	return result;

@@ -48,7 +48,7 @@ const tryLastPage = async (sortDirection) => {
 	const sortValues = {};
 
 	for (const [key, value] of Object.entries(sortDirection)) {
-		sortValues[key] = lastItem[key];
+		sortValues[key] = getNestedValue(lastItem, key);
 	}
 
 	nativeResult.reverse();
@@ -75,12 +75,9 @@ const tryLastPage = async (sortDirection) => {
 	expect(paignResult.metadata.next).toEqual(null);
 };
 
-await setupConnection();
-
-// beforeAll(async () => {
-// 	await setupConnection();
-// 	// await setupSeeds();
-// });
+beforeAll(async () => {
+	await setupConnection();
+});
 
 test('tweak query without options', () => {
 	const queryOptions = User.find().paginator().tweak().getQuery().getOptions();
@@ -139,6 +136,18 @@ test('second page { createdAt: -1 }', async () => {
 
 test('last page { createdAt: -1 }', async () => {
 	await tryLastPage({ createdAt: -1 });
+});
+
+test('first page { "profile.subscriptionDate": -1 }', async () => {
+	await tryFirstPage({ 'profile.subscriptionDate': -1 });
+});
+
+test('second page { "profile.subscriptionDate": -1 }', async () => {
+	await trySecondPage({ 'profile.subscriptionDate': -1 });
+});
+
+test('last page { "profile.subscriptionDate": -1 }', async () => {
+	await tryLastPage({ 'profile.subscriptionDate': -1 });
 });
 
 test('first page { createdAt: -1, _id: -1 }', async () => {
@@ -227,4 +236,10 @@ function toArray(stream) {
 			stream.removeListener('close', onClose);
 		}
 	});
+}
+
+function getNestedValue(obj, path) {
+	return path.split('.').reduce((current, key) => {
+		return current && current[key] !== undefined ? current[key] : undefined;
+	}, obj);
 }

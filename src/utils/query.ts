@@ -1,4 +1,4 @@
-import { isEmptyObject, cloneDeep, sameKeys } from './object.js';
+import { cloneDeep, isEmptyObject, sameKeys } from './object.js';
 
 export function rangeFilter(sortDirection: Record<string, any>, sortValues: Record<string, any>) {
 	const keys = Object.keys(sortDirection).filter((sortKey) => sortValues[sortKey] !== undefined);
